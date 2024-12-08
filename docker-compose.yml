@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15.3
+    restart: always
+    ports:
+      - "5436:5432"                       # local:container
+    environment:
+      POSTGRES_PASSWORD: postgres1234
+      POSTGRES_DB: movies_db
+      POSTGRES_USERNAME: postgres
+    container_name: movies_backend
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
