@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +38,15 @@ public class MovieController {
         Optional<Movie> movie = movieRepository.findById( id );
     
         return movie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @CrossOrigin                                            // front pueda realizar peticiones
+    @PostMapping                                            // localhost:8081/api/movies
+    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie ) {
+
+        Movie savedMovie = movieRepository.save( movie );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body( savedMovie );
     }
 
 }
