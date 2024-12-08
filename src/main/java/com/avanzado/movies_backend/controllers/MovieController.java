@@ -1,9 +1,13 @@
 package com.avanzado.movies_backend.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,9 +22,19 @@ public class MovieController {
     private MovieRepository movieRepository;
 
     // CRUD
+    @CrossOrigin
     @GetMapping                                     // localhost:8081/api/movies
     public List<Movie> getAllMovies() {
         return movieRepository.findAll();           // extendido del JPA repository de hibernate
+    }
+
+    @CrossOrigin
+    @GetMapping("/detail/{id}")                     // localhost:8081/api/movies/detail/1
+    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {        //@PathVariable indica que recibe por parametro
+        
+        Optional<Movie> movie = movieRepository.findById( id );
+    
+        return movie.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
