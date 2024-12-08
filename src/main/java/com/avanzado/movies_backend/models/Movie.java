@@ -17,7 +17,7 @@ public class Movie {
 
     private String title;
     private int year;
-    private int votes;
+    private int votos;
     private double rating;
 
     //@Column(name = "image_url", nullable = true )
@@ -45,11 +45,11 @@ public class Movie {
         this.year = year;
     } 
 
-    public int getVotes() {
-        return votes;
+    public int getVotos() {
+        return votos;
     }
-    public void setVotes(int votes) {
-        this.votes = votes;
+    public void setVotos(int votos) {
+        this.votos = votos;
     } 
 
     public double getRating() {
