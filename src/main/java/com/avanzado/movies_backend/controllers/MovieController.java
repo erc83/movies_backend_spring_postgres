@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClient.ResponseSpec;
 
 import com.avanzado.movies_backend.repositories.MovieRepository;
 import com.avanzado.movies_backend.models.Movie;
@@ -65,6 +66,7 @@ public class MovieController {
 
     } 
 
+    @CrossOrigin
     @PutMapping("/detail/{id}")
     public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody  Movie updatedMovie) {
         
@@ -78,6 +80,35 @@ public class MovieController {
         Movie savedMovie =  movieRepository.save(updatedMovie);
 
         return ResponseEntity.ok(savedMovie);
+    }
+
+    @CrossOrigin
+    @PutMapping("/vote/{id}/{rating}")
+    public ResponseEntity<Movie> voteMovie(@PathVariable Long id, @PathVariable double rating) {
+
+        if(!movieRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        //generar una nueva pelicula
+                    //Movie movie = movieRepository.findById(id);   metodo estatico
+        Optional <Movie> optional = movieRepository.findById(id);
+        Movie movie = optional.get();
+
+        // calcular el nuevo rating con la media de puntuacion
+        // movie.rating
+        // movie.votes
+        // ((votes * rating) + rating ) / ( votos + 1)
+        double newRating = ( (movie.getVotos() * movie.getRating() ) + rating ) / (movie.getVotos() + 1 );
+
+        movie.setVotos( movie.getVotos() + 1 );
+
+        movie.setRating( newRating );
+
+        Movie savedMovie = movieRepository.save( movie );
+
+        return ResponseEntity.ok(savedMovie);
+
     }
 
 }
