@@ -1,48 +1,91 @@
+# Proyecto Backend con Spring Boot y PostgreSQL
 
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
-# Clonar el repositorio
+## Descripción
 
-- Entrar en la carpeta de trabajo
+Este proyecto es un backend desarrollado con **Spring Boot**, un potente framework de Java que permite construir aplicaciones de manera rápida y sencilla, y utiliza **PostgreSQL** como sistema de gestión de bases de datos relacional.
 
-# Prerequisitos tener instalado:
+### Características principales
 
-- Java 17
-- mvn 3.9.8
+- **Framework**: Spring Boot
+- **Base de datos**: PostgreSQL
+- **Gestión de dependencias**: Maven
+- **Versión de Java**: 17
+- **ORM**: Hibernate (JPA)
 
-## Levantar base de datos postgres en un container docker
+## Requisitos previos
 
-```
-docker-compose up -d
-```
+Antes de ejecutar este proyecto, asegúrate de tener instalados los siguientes programas:
 
-## conectarse con la base de datos con dbearer o tu tools favorita para conectar a postgres
+- Java 17 o superior
+- Maven 3.8 o superior
+- Docker Desktop
 
-```
-Host: localhost
-Database: movies_db
-Port: 5436
-Username: postgres
-password: postgres1234
-```
+## Clonar el repositorio
 
+1. Clonar este repositorio:
+   ```bash
+   git clone https://github.com/usuario/proyecto-backend.git
+   ```
 
-## crear tablas movies, user y token en la database movies_db revisar el archivo create_tables.sql
+2. Entrar en la carpeta de trabajo:
+   ```bash
+   cd proyecto-backend
+   ```
 
-src\db\create_tables.sql
+## Levantar base de datos PostgreSQL en un contenedor Docker
 
+1. Ejecutar el siguiente comando para levantar la base de datos:
+   ```bash
+   docker-compose up -d
+   ```
 
-## cambia el nombre del archivo .env.example a .env
+2. Conéctate con la base de datos usando DBeaver o tu herramienta favorita:
+   ```
+   Host: localhost
+   Database: movies_db
+   Port: 5436
+   Username: postgres
+   Password: postgres1234
+   ```
 
+## Configuración de la base de datos
 
+1. Crear las tablas `movies`, `user` y `token` en la base de datos `movies_db`.
+   Revisa el archivo `create_tables.sql` ubicado en:
+   ```
+   src\db\create_tables.sql
+   ```
 
-###  Limpiar y compilar la applicación
+2. Cambiar el nombre del archivo `.env.example` a `.env` y configurar las variables necesarias.
 
-```
-mvn clean install
-```
+## Configuración del proyecto
 
-### Ejecutar la applicacion
+1. Limpiar y compilar la aplicación:
+   ```bash
+   mvn clean install
+   ```
 
-```
-mvn spring-boot:run
-```
+2. Ejecutar la aplicación:
+   ```bash
+   mvn spring-boot:run
+   ```
+
+## Estructura del proyecto
+
+El proyecto sigue una arquitectura estándar en Spring Boot:
+
+- **Controller**: Maneja las solicitudes HTTP.
+- **Service**: Contiene la lógica de negocio.
+- **Repository**: Interactúa con la base de datos utilizando JPA/Hibernate.
+- **Entity**: Define las entidades del modelo de datos.
+
+## Contribuciones
+
+¡Las contribuciones son bienvenidas! Por favor, abre un issue o crea un pull request para sugerir mejoras.
+
+## Licencia
+
+Este proyecto está licenciado bajo la [MIT License](LICENSE).
