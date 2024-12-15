@@ -36,7 +36,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/auth/**")
+                        //req.requestMatchers("/auth/**", "/api/v1/users", "/error")     // no requiere token la solicitud de los usuarios
+                        req.requestMatchers("/auth/**", "/error")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

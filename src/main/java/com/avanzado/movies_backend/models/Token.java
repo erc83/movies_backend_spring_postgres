@@ -11,8 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "tokens")
 public final class Token {
-
+    
+    public enum TokenType {
+        BEARER
+    }
+    
     @Id
     @GeneratedValue
     private Integer id;
@@ -22,6 +27,7 @@ public final class Token {
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
+    @Column(name = "token_type")
     private TokenType tokenType = TokenType.BEARER;
 
     @Column(nullable = false , name = "revoked")
@@ -31,11 +37,8 @@ public final class Token {
     private Boolean isExpired;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public enum TokenType {
-        BEARER
-    }
 
 }

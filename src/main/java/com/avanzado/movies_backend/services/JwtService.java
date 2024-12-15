@@ -2,6 +2,7 @@ package com.avanzado.movies_backend.services;
 
 import com.avanzado.movies_backend.models.User;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -9,7 +10,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+//import javax.crypto.spec.SecretKeySpec;
+
+//import java.util.Base64;
 import java.util.Date;
+//import java.util.Map;
 import java.util.Map;
 
 @Service
@@ -23,27 +28,29 @@ public class JwtService {
     private long refreshExpiration;
 
     public String extractUsername(String token) {
-        return Jwts.parser()
+        final Claims jwtToken = Jwts.parser()
                 .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+                .getPayload();
+        return jwtToken.getSubject();
     }
 
     public String generateToken(final User user) {
-        return buildToken(user, refreshExpiration);
+        return buildToken(user, jwtExpiration);
     }
 
     public String generateRefreshToken(final User user) {
-        return buildToken(user, refreshExpiration);
+        String token = buildToken(user, refreshExpiration);
+        System.out.println("Generated Token: " + token);
+        return token;
     }
 
     private String buildToken(final User user, final long expiration) {
-        return Jwts
-                .builder()
-                .claims(Map.of("name", user.getName()))
+        return Jwts.builder()
+                .id(user.getId().toString())
                 .subject(user.getEmail())
+                .claims(Map.of("name", user.getId()))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey())
@@ -60,15 +67,18 @@ public class JwtService {
     }
 
     private Date extractExpiration(String token) {
-        return Jwts.parser()
+        final Claims jwtToken = Jwts.parser()
                 .verifyWith(getSignInKey())
                 .build()
                 .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration();
+                .getPayload();
+        return jwtToken.getExpiration();   
     }
 
     private SecretKey getSignInKey() {
+        //byte[] keyBytes = Base64.getDecoder().decode(secretKey);
+        //return new SecretKeySpec(keyBytes,0,keyBytes.length, secretKey);
+
         final byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

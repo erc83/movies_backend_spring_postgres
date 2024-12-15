@@ -30,15 +30,17 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public TokenResponse register(final RegisterRequest request) {
-        final User user = User.builder()
+        var user = User.builder()
                 .name(request.name())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .build();
 
-        final User savedUser = repository.save(user);
-        final String jwtToken = jwtService.generateToken(savedUser);
-        final String refreshToken = jwtService.generateRefreshToken(savedUser);
+        var savedUser = repository.save(user);  // guardo al usuario en la base de datos
+
+        //generar los tokens
+        var jwtToken = jwtService.generateToken(savedUser);
+        var refreshToken = jwtService.generateRefreshToken(savedUser);
 
         saveUserToken(savedUser, jwtToken);
         return new TokenResponse(jwtToken, refreshToken);
@@ -61,12 +63,13 @@ public class AuthService {
     }
 
     private void saveUserToken(User user, String jwtToken) {
-        final Token token = Token.builder()
-                .user(user)
+        // var token = Token.builder()
+        Token token = Token.builder()
                 .token(jwtToken)
                 .tokenType(Token.TokenType.BEARER)
                 .isExpired(false)
                 .isRevoked(false)
+                .user(user)
                 .build();
         tokenRepository.save(token);
     }
