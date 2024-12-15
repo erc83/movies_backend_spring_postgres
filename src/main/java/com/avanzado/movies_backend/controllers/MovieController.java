@@ -29,13 +29,13 @@ public class MovieController {
 
     // CRUD
     @CrossOrigin
-    @GetMapping                                     // localhost:8081/api/movies
+    @GetMapping("/all")                                     // localhost:8081/api/movies
     public List<Movie> getAllMovies() {
         return movieRepository.findAll();           // extendido del JPA repository de hibernate
     }
 
     @CrossOrigin
-    @GetMapping("/detail/{id}")                     // localhost:8081/api/movies/detail/1
+    @GetMapping("/all/{id}")                     // localhost:8081/api/movies/detail/1
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {        //@PathVariable indica que recibe por parametro
         
         Optional<Movie> movie = movieRepository.findById( id );
@@ -82,7 +82,7 @@ public class MovieController {
     }
 
     @CrossOrigin
-    @PutMapping("/vote/{id}/{rating}")
+    @PutMapping("/vote/{id}/rating/{rating}")
     public ResponseEntity<Movie> voteMovie(@PathVariable Long id, @PathVariable double rating) {
 
         if(!movieRepository.existsById(id)) {
@@ -91,8 +91,8 @@ public class MovieController {
 
         //generar una nueva pelicula
                     //Movie movie = movieRepository.findById(id);   metodo estatico
-        Optional <Movie> optional = movieRepository.findById(id);
-        Movie movie = optional.get();
+        //Optional <Movie> optional = movieRepository.findById(id);
+        Movie movie = movieRepository.findById(id).get();
 
         // calcular el nuevo rating con la media de puntuacion
         // movie.rating

@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         //req.requestMatchers("/auth/**", "/api/v1/users", "/error")     // no requiere token la solicitud de los usuarios
-                        req.requestMatchers("/auth/**", "/error")
+                        req.requestMatchers("/auth/**", "/error", "/api/movies/all/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
