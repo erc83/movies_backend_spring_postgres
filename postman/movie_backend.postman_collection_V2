@@ -1,0 +1,287 @@
+{
+	"info": {
+		"_postman_id": "4fd6a4bf-4d5e-44fa-be45-decfbecea446",
+		"name": "movie_backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13143158"
+	},
+	"item": [
+		{
+			"name": "User auth",
+			"item": [
+				{
+					"name": "RegisterUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Eric\",\r\n    \"email\": \"eric@prueba.com\",\r\n    \"password\": 123456\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"eric@prueba.com\",\r\n    \"password\": 123456\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUsersToken",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJqdGkiOiIyOTAyIiwic3ViIjoiZXJpY0BwcnVlYmEuY29tIiwibmFtZSI6MjkwMiwiaWF0IjoxNzM0MjQ0NDQ1LCJleHAiOjE3MzQzMzA4NDV9.GeSp0fKcK7o93sAvkKwOJChjV0A3ot2fMgA3RPfmZbWVIsw1VbFkTerwiOU-3GJp",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8082/api/v1/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "movies_authorization",
+			"item": [
+				{
+					"name": "createMovie",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJqdGkiOiIyOTAyIiwic3ViIjoiZXJpY0BwcnVlYmEuY29tIiwibmFtZSI6MjkwMiwiaWF0IjoxNzM0MjQ0NDQ1LCJleHAiOjE3MzQzMzA4NDV9.GeSp0fKcK7o93sAvkKwOJChjV0A3ot2fMgA3RPfmZbWVIsw1VbFkTerwiOU-3GJp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"kung fu panda\",\r\n    \"year\": 2000,\r\n    \"votos\": 1,\r\n    \"rating\": 4.5,\r\n    \"imageUrl\": \"url kungfu panda\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteMovieById",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJqdGkiOiIyOTAyIiwic3ViIjoiZXJpY0BwcnVlYmEuY29tIiwibmFtZSI6MjkwMiwiaWF0IjoxNzM0MjQ0NDQ1LCJleHAiOjE3MzQzMzA4NDV9.GeSp0fKcK7o93sAvkKwOJChjV0A3ot2fMgA3RPfmZbWVIsw1VbFkTerwiOU-3GJp",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8082/api/movies/detail/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"movies",
+								"detail",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateMovie",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJqdGkiOiIyOTAyIiwic3ViIjoiZXJpY0BwcnVlYmEuY29tIiwibmFtZSI6MjkwMiwiaWF0IjoxNzM0MjQ0NDQ1LCJleHAiOjE3MzQzMzA4NDV9.GeSp0fKcK7o93sAvkKwOJChjV0A3ot2fMgA3RPfmZbWVIsw1VbFkTerwiOU-3GJp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"El unico updated\",\r\n    \"year\": 1995,\r\n    \"votos\": 50,\r\n    \"rating\": 5,\r\n    \"imageUrl\": \"url update\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/movies/detail/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"movies",
+								"detail",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateRatingMovie",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJqdGkiOiIyOTAyIiwic3ViIjoiZXJpY0BwcnVlYmEuY29tIiwibmFtZSI6MjkwMiwiaWF0IjoxNzM0MjQ0NDQ1LCJleHAiOjE3MzQzMzA4NDV9.GeSp0fKcK7o93sAvkKwOJChjV0A3ot2fMgA3RPfmZbWVIsw1VbFkTerwiOU-3GJp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/movies/vote/4/rating/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"movies",
+								"vote",
+								"4",
+								"rating",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "getAllMovies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/api/movies/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"movies",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getMovieById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/api/movies/all/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"movies",
+						"all",
+						"6"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

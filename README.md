@@ -26,9 +26,13 @@ password: postgres1234
 ```
 
 
-## crear tabla movies en la database movies_db revisar el archivo init.sql
+## crear tablas movies, user y token en la database movies_db revisar el archivo create_tables.sql
 
-src\db\init.sql
+src\db\create_tables.sql
+
+
+## cambia el nombre del archivo .env.example a .env
+
 
 
 ###  Limpiar y compilar la applicación
