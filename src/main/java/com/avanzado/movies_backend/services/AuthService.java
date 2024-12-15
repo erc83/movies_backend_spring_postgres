@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -36,7 +37,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.password()))
                 .build();
 
-        var savedUser = repository.save(user);  // guardo al usuario en la base de datos
+        var savedUser = userRepository.save(user);  // guardo al usuario en la base de datos
 
         //generar los tokens
         var jwtToken = jwtService.generateToken(savedUser);
@@ -53,7 +54,7 @@ public class AuthService {
                         request.password()
                 )
         );
-        final User user = repository.findByEmail(request.email())
+        final User user = userRepository.findByEmail(request.email())
                 .orElseThrow();
         final String accessToken = jwtService.generateToken(user);
         final String refreshToken = jwtService.generateRefreshToken(user);
@@ -90,19 +91,31 @@ public class AuthService {
         if (authentication == null || !authentication.startsWith("Bearer ")) {
             throw new IllegalArgumentException("Invalid auth header");
         }
+
         final String refreshToken = authentication.substring(7);
         final String userEmail = jwtService.extractUsername(refreshToken);
+
         if (userEmail == null) {
-            return null;
+            throw new IllegalArgumentException("Invalid Refresh Token");
         }
 
-        final User user = this.repository.findByEmail(userEmail).orElseThrow();
-        final boolean isTokenValid = jwtService.isTokenValid(refreshToken, user);
-        if (!isTokenValid) {
-            return null;
+
+        // verificamos si el token que se ha enviado el mismo que esta en la base de datos
+        final User user = userRepository.findByEmail(userEmail)
+            .orElseThrow(() -> new UsernameNotFoundException(userEmail));
+
+        //final boolean isTokenValid = jwtService.isTokenValid(refreshToken, user);
+        if(!jwtService.isTokenValid(refreshToken, user)) {
+            throw new IllegalArgumentException("Invalid Refresh Token");
         }
 
-        final String accessToken = jwtService.generateRefreshToken(user);
+
+        //final boolean isTokenValid = jwtService.isTokenValid(refreshToken, user);
+        //if (!isTokenValid) {
+        //    return null;
+        //}
+
+        final String accessToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
 

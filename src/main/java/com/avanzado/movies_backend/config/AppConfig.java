@@ -19,12 +19,12 @@ import com.avanzado.movies_backend.repositories.UserRepository;
 @RequiredArgsConstructor
 public class AppConfig {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-            final User user = repository.findByEmail(username)
+            final User user = userRepository.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getEmail())

@@ -56,7 +56,8 @@ public class SecurityConfig {
     }
 
     private void logout(
-            final HttpServletRequest request, final HttpServletResponse response,
+            final HttpServletRequest request, 
+            final HttpServletResponse response,
             final Authentication authentication
     ) {
 

@@ -3,7 +3,7 @@ package com.avanzado.movies_backend.config;
 import com.avanzado.movies_backend.repositories.TokenRepository;
 
 import com.avanzado.movies_backend.services.JwtService;
-
+import com.avanzado.movies_backend.models.Token;
 import com.avanzado.movies_backend.models.User;
 import com.avanzado.movies_backend.repositories.UserRepository;
 
@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getServletPath().contains("/api/v1/users")) {
+        if (request.getServletPath().contains("/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,39 +52,64 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        final String jwt = authHeader.substring(7);
-        final String userEmail = jwtService.extractUsername(jwt);
+        final String jwtToken = authHeader.substring(7);
+        final String userEmail = jwtService.extractUsername(jwtToken);
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (userEmail == null || authentication != null) {
-            filterChain.doFilter(request, response);
+            //filterChain.doFilter(request, response);
             return;
         }
 
+        final Token token = tokenRepository.findByToken(jwtToken)
+                                        .orElse(null);
+
+        if(token == null || token.getIsExpired() || token.getIsRevoked()) {
+            filterChain.doFilter(request, response);
+            return;
+        }                                        
+
+                                        
         final UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-        final boolean isTokenExpiredOrRevoked = tokenRepository.findByToken(jwt)
-                .map(token -> !token.getIsExpired() && !token.getIsRevoked())
-                .orElse(false);
-
-
-        if (isTokenExpiredOrRevoked) {
-            final Optional<User> user = userRepository.findByEmail(userEmail);
-
-            if (user.isPresent()) {
-                final boolean isTokenValid = jwtService.isTokenValid(jwt, user.get());
-
-                if (isTokenValid) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(
-                            new WebAuthenticationDetailsSource().buildDetails(request)
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            }
+        final Optional<User> user = userRepository.findByEmail(userDetails.getUsername());
+        if(user.isEmpty()) {
+            filterChain.doFilter(request, response);
         }
+
+        final var authToken = new UsernamePasswordAuthenticationToken(
+            userDetails,
+            null,
+            userDetails.getAuthorities()
+        );
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        filterChain.doFilter(request, response);
+        
+
+        //final boolean isTokenExpiredOrRevoked = tokenRepository.findByToken(jwt)
+        //        .map(token -> !token.getIsExpired() && !token.getIsRevoked())
+        //        .orElse(false);
+//
+//
+        //if (isTokenExpiredOrRevoked) {
+        //    final Optional<User> user = userRepository.findByEmail(userEmail);
+//
+        //    if (user.isPresent()) {
+        //        final boolean isTokenValid = jwtService.isTokenValid(jwt, user.get());
+//
+        //        if (isTokenValid) {
+        //            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+        //                    userDetails,
+        //                    null,
+        //                    userDetails.getAuthorities()
+        //            );
+        //            authToken.setDetails(
+        //                    new WebAuthenticationDetailsSource().buildDetails(request)
+        //            );
+        //            SecurityContextHolder.getContext().setAuthentication(authToken);
+        //        }
+        //    }
+        //}
 
         filterChain.doFilter(request, response);
     }
